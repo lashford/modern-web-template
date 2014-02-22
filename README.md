@@ -10,7 +10,7 @@ fronted with Twitter bootstrap CSS framework, because well im not a web designer
   * Take a look at what the google cool kids are upto here : [AngularJS](http://angularjs.org/)
 
 * **Bootstrap** - Bootstrap components written in pure AngularJS
-  *  http://angular-ui.github.io/bootstrap/
+  *  [http://angular-ui.github.io/bootstrap/](http://angular-ui.github.io/bootstrap/)
 
 * **PlayFramework** - currently using 2.2.1 with the scala API
 
@@ -35,7 +35,7 @@ Once the prerequisites have been installed, you will be able to execute the foll
 ~.../projects/modern-web-template >  play run
 ```
 
-This should fetch all the dependencies and start a Web Server listening on localhost:9000
+This should fetch all the dependencies and start a Web Server listening on *localhost:9000*
 
 ```
 [info] Loading project definition from ~.../projects/modern-web-template/project
