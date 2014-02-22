@@ -1,6 +1,5 @@
 Modern Web Template
 ===========
----
 
 **AngularJS - Scala - Play - Guice - PlayReactiveMongo**
 
@@ -25,7 +24,6 @@ fronted with Twitter bootstrap CSS framework, because well im not a web designer
 
 Getting Started
 ----------
----
 
 Your development environment will require:
 *  SBT / Play see [here]() for installation instructions.
