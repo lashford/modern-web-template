@@ -5,10 +5,10 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import scala.concurrent.Future
 import reactivemongo.api.Cursor
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
 import org.slf4j.{LoggerFactory, Logger}
 import javax.inject.Singleton
 import play.api.mvc._
+import play.api.libs.json._
 
 /**
  * The Users controllers encapsulates the Rest endpoints and the interaction with the MongoDB, via ReactiveMongo
@@ -69,10 +69,14 @@ class Users extends Controller with MongoController {
     // gather all the JsObjects in a list
     val futureUsersList: Future[List[User]] = cursor.collect[List]()
 
+    // transform the list into a JsArray
+    val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
+      Json.arr(users)
+    }
     // everything's ok! Let's reply with the array
-    futureUsersList.map {
-      persons =>
-        Ok(persons.toString)
+    futurePersonsJsonArray.map {
+      users =>
+        Ok(users(0))
     }
   }
 

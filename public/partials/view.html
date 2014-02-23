@@ -1,0 +1,41 @@
+
+<div class="row">
+    <div>
+        <h3>Users</h3>
+        <hr>
+        <label>Search : </label> &NonBreakingSpace; <input type="text" ng-model="searchText">
+        <a ng-href="/#/users/create" class="btn btn-primary pull-right" id="btn_user_create">Add User</a>
+        <hr>
+    </div>
+
+
+    <table id="user_list" class="table table-striped">
+        <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="usr in uc.users | filter:searchText">
+            <td>
+                {{ usr.firstName }}
+            </td>
+            <td>
+                {{ usr.lastName }}
+            </td>
+            <td>
+                {{ usr.age }}
+            </td>
+        </tr>
+        <tr ng-hide="uc.users.length">
+            <td colspan="3">
+                <p class="text-center">No Users Found</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <pre>{{ uc.users | json }}</pre>
+</div>
