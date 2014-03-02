@@ -21,7 +21,7 @@ fronted with Twitter bootstrap CSS framework, because well, im not a web designe
 * **Guice** integration for Dependency injection,
   * Special thanks to the typesafehub team for their activator : [Play-Guice](http://www.typesafe.com/activator/template/play-guice)
 
-* **PlayReactiveMongo** gives interaction with the MongoDB via provides a non-blocking driver as well as some useful additions for handling JSON in the plugin
+* **PlayReactiveMongo** gives interaction with MongoDB providing a non-blocking driver as well as some useful additions for handling JSON.
   * Check out their GitHub: [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo)
 
 
@@ -36,13 +36,13 @@ Your development environment will require:
 Once the prerequisites have been installed, you will be able to execute the following from a terminal.
 
 ```
-~../modern-web-template >  play run
+../modern-web-template >  play run
 ```
 
 This should fetch all the dependencies and start a Web Server listening on *localhost:9000*
 
 ```
-[info] Loading project definition from ~.../projects/modern-web-template/project
+[info] Loading project definition from ../modern-web-template/project
 [info] Set current project to modern-web-template
 [info] Updating modern-web-template...
 ...
