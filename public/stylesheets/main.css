@@ -1,1 +1,7 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+body {
+    padding-top: 70px;
+    padding-bottom: 30px;
+    min-width: 970px;
+}

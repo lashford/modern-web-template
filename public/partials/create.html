@@ -1,0 +1,51 @@
+<div class="row">
+    <div ng-controller="CreateUserCtrl as cuc">
+        <h1>Create User</h1>
+
+        <form id="CreateUserForm" name="CreateUserForm" class="form-horizontal" role="form"
+              ng-submit="cuc.createUser()">
+            <legend class="sm-col-12">Basic Information</legend>
+
+            <div class="form-group">
+                <label id="lbl_firstName" for="firstName" class="col-sm-4 control-label">First Name</label>
+
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="firstName" id="firstName" placeholder=""
+                           ng-model="cuc.user.firstName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="lbl_lastName" for="lastName" class="col-sm-4 control-label">Last Name</label>
+
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="lastName" id="lastName" placeholder=""
+                           ng-model="cuc.user.lastName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="lbl_age" for="age" class="col-sm-4 control-label"
+                       is-required="CreateUserForm.age">Age</label>
+
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" name="age" id="age"
+                           ng-model="cuc.user.age">
+                </div>
+            </div>
+
+            <pre>{{ cuc.user | json }}</pre>
+
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8 text-right">
+                    <a ng-href="/#/" id="btn_cancel" class="btn btn-warning">Cancel</a>
+
+                    <button type="submit" class="btn btn-success" id="btn_create">Create User</button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+

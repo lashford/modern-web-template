@@ -1,43 +1,59 @@
 
-<div class="row">
-    <div>
-        <h3>Users</h3>
-        <hr>
-        <label>Search : </label> &NonBreakingSpace; <input type="text" ng-model="searchText">
-        <a ng-href="/#/users/create" class="btn btn-primary pull-right" id="btn_user_create">Add User</a>
-        <hr>
+
+    <div class="row" ng-controller="UserCtrl as uc">
+        &NonBreakingSpace;
+        <div class="jumbotron">
+            <h2>A Modern Web Template</h2>
+
+            <p class="pull-right">... a UI created using AngularJS and Bootstrap</p>
+        </div>
+
+
+        <div class="row">
+            <div class="form-group">
+                <h3>
+                    Users
+                    <a ng-href="/#/users/create" class="btn btn-primary pull-right" id="btn_user_create">Add User</a>
+                </h3>
+                <hr>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="searchText" placeholder="Type here to filter Users...">
+                <hr>
+            </div>
+
+
+            <table id="user_list" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Age</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="usr in uc.users | filter:searchText">
+                    <td>
+                        {{ usr.firstName }}
+                    </td>
+                    <td>
+                        {{ usr.lastName }}
+                    </td>
+                    <td>
+                        {{ usr.age }}
+                    </td>
+                </tr>
+                <tr ng-hide="uc.users.length">
+                    <td colspan="3">
+                        <p class="text-center">No Users Found</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <hr>
+            <h4>Debug:</h4>
+            <pre>{{ uc.users | json }}</pre>
+        </div>
+
     </div>
-
-
-    <table id="user_list" class="table table-striped">
-        <thead>
-        <tr>
-            <th>FirstName</th>
-            <th>LastName</th>
-            <th>Age</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="usr in uc.users | filter:searchText">
-            <td>
-                {{ usr.firstName }}
-            </td>
-            <td>
-                {{ usr.lastName }}
-            </td>
-            <td>
-                {{ usr.age }}
-            </td>
-        </tr>
-        <tr ng-hide="uc.users.length">
-            <td colspan="3">
-                <p class="text-center">No Users Found</p>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <hr>
-    <h4>Debug:</h4>
-    <pre>{{ uc.users | json }}</pre>
-</div>
