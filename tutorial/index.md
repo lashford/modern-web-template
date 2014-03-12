@@ -172,9 +172,13 @@ And there we have it, execute the following from inside the project
 and Play will compile the CoffeeScript and launch a websever on localhost:9000, `play run` is wrapping SBT and so gives us "hot compile" of the code for seemless web development.
 
 ## Screenshots
-Bellow are screenshots of the activator running, showing the Create User form and the List users pages.  
+Bellow are screenshots of the activator running, showing the Create User form and the List users pages.
+
+create User
 
 ![User Creation](https://raw.github.com/lashford/modern-web-template/master/tutorial/create.png)
+
+List Users
 
 ![View Users](https://raw.github.com/lashford/modern-web-template/master/tutorial/view.png)
 
