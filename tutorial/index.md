@@ -44,7 +44,7 @@ Play is a high-productivity web-framework with a great Scala api, making it easy
 [Play 2 Framework](http://www.playframework.com/documentation/2.2.x/Home)
 
 
-## Structure
+## The Activator
 So lets get down to it and allow me to begin, by showing the overall structure of the application we are building.
 
 ![Overall structure](https://raw.github.com/lashford/modern-web-template/master/tutorial/overview.png)
