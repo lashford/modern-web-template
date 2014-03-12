@@ -184,7 +184,7 @@ List Users
 
 ## Developement Setup
 
-To run the activator locally you will need to setup a few things, please see the readme for prerequisit [Instructions](http://github.com/lashford/modern-web-template/blob/master/README.md)
+To run the activator locally you will need to setup a few things, please see the readme for prerequisites [Instructions](http://github.com/lashford/modern-web-template/blob/master/README.md)
 
 ##Summary
 
