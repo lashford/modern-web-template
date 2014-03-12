@@ -9,7 +9,7 @@ Sounds like a cool stack, well I think so!  In this tutorial, I'm going to cover
 expose a Rest Api in Play and Read/Write Json Documents in MongoDB.  By the end we will have created a simple User
 management app which gives a thin slice of Entity management, collecting data in the Angular app and persisting in MongoDB.
 
-## AngularJS & CoffeeScript
+### AngularJS & CoffeeScript
 
 AngularJs is a client side MVC style framework written in Javascript. The framework adapts and extends traditional HTML to better serve dynamic content through two-way data-binding that allows for the automatic synchronization of models and views. As a result, AngularJS deemphasizes DOM manipulation and improves testability.
 
@@ -21,7 +21,7 @@ Traditionally Angular applications are wrote in Javascript, my main objection to
 
 read more about [CoffeeScript](http://coffeescript.org/) & [AngularJS](http://angularjs.org/)
 
-## BootstrapUI
+### BootstrapUI
 
 Well to be honest any CSS framework would do here, I quite like Bootstrap, its well supported and means I dont need to hand crank CSS.  Becasue well at the end of the day im not a web designer, I like Arial font, primary colours and simple layouts. :-) 
 
@@ -31,27 +31,27 @@ for more reading check out:
 Or 
 [Zorb Foundation](http://foundation.zurb.com/)
 
-## MongoDb
+### MongoDb
 
 MongoDB (from "humongous") is an open-source document database, and the leading NoSQL database.  Its schema free design make it highly scalable, cost effective and more.  MongoDB enables profound developer agility through its flexible data model.  
 
 [MongoDb](http://www.mongodb.com)
 
-## Play 2 Framework & Scala
+### Play 2 Framework & Scala
 
 Play is a high-productivity web-framework with a great Scala api, making it easy to create modern, reactive web applications
 
 [Play 2 Framework](http://www.playframework.com/documentation/2.2.x/Home)
 
 
-##Structure
+## Structure
 So lets get down to it and allow me to begin, by showing the overall structure of the application we are building.
 
 ![Overall structure](https://raw.github.com/lashford/modern-web-template/master/tutorial/overview.png)
 
 So now we know the components lets see how they all fit together:
 
-##MongoDB integration.
+###MongoDB integration.
 
 I opted to use the Reactive Mongo driver to give me scalability with an asycrhonous, non-blocking interface to the Mongo-cli.
 The guys over at [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo) have made this integration even easier with a play 2 plugin.
@@ -102,7 +102,7 @@ def createUser = Action.async(parse.json) {
 
 And your done, you have the ability to write JSON documents to Mongo.
 
-## Play REST API
+### Play REST API
 
 Lets now move on to exposing this method as a `REST` endpoint in play by adding the following line to `\conf\routes`
 
@@ -116,13 +116,13 @@ At this point you should be able to execute `play run` which would start a http 
 http://localhost:9000/user
 ```
 
-##Angular App
+### Angular App
 
 ...TBD
 
 
 
-## Serving Angular from a single page.
+### Serving Angular from a single page.
 
 So now we have the angular app created we need to serve the index page from Play, which will provide the full angular mvc framework to the client browser.
 
@@ -190,4 +190,6 @@ To run the activator locally you will need to setup a few things, please see the
 
 The code is available to download or fork [here](http://github.com/lashford/modern-web-template/), please feel free to raise issues and submit enhancements via pull requests.
 
-###That's all folks...
+That's all folks...
+
+#### Alex Lashford
