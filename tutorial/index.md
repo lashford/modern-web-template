@@ -97,14 +97,14 @@ And your done! At this point you have the ability to Write and Read JSON documen
 
 ### Play REST API
 
-Lets expose these methods as a `REST` endpoint in play by adding the following line to [conf/routes](https://github.com/lashford/modern-web-template/blob/master/conf/routes)
+Lets expose these methods as a `REST` endpoint in Play by adding the following line to [conf/routes](https://github.com/lashford/modern-web-template/blob/master/conf/routes)
 
 ```
 GET     /users                      @controllers.Users.findUsers
 POST    /user                       @controllers.Users.createUser
 ```
 
-At this point you will be able to execute `play run` which would start a http server running on port 9000, this will expose the endpoints for creating and list users.
+At this point you will be able to execute `play run` which would start a http server running on port 9000, this will expose the endpoints for creating and listing users.
 
 Using your favourtie Rest Client ([PostMan](http://www.getpostman.com/) maybe?) you can now test the endpoints by posting some Json.  
 
@@ -129,7 +129,7 @@ This gives us the back-end to our application, now lets create a UI to consume t
 
 ### Angular App
 
-AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application, once playing with this activator i suggest doing some reading, the docs and learning material are pretty extensive and the comunity is very active.  I'll run you the key points of how the code hangs together in CoffeeScript, so lets start by taking a look at `app.coffee`
+AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application, after playing with this activator I suggest doing some reading, the docs and learning material are pretty extensive and the comunity is very active.  I'll run you through the key points of how the code hangs together in CoffeeScript, so lets start by taking a look at `app.coffee`
 
 ```
 dependencies = [
@@ -221,7 +221,7 @@ Create an index.scala.html template page where you can define the Angular Direct
 ```
 
 
-Notice here we have added the **ng-app** directive to the html tag, this binds the angukar app to this page and when loaded will construct the app for us.  Each of the *CoffeeScript* files are compiled into individual Javascript files that need adding as resources to the single page.
+Notice here we have added the **ng-app** directive to the html tag, this binds the Angular app to this page and when loaded will construct the app for us.  Each of the *CoffeeScript* files are compiled into individual Javascript files that need adding as resources to the single page.
 
 
 Now we can add a routes entry and a controller to serve this single page, [Routes](https://github.com/lashford/modern-web-template/blob/master/conf/routes) [Controller](https://github.com/lashford/modern-web-template/blob/master/app/controllers/Application.scala)
@@ -237,16 +237,10 @@ Now we can add a routes entry and a controller to serve this single page, [Route
    }
 ```
 
-And there we have it, execute the following in a terminal from inside the project  
-```
-> play run
-```
-and Play will compile the CoffeeScript and launch a webserver on localhost:9000, `play run` is wrapping SBT and so gives us "hot compile" of the code for seemless web development, so saved changes are instantly reflected on the browser.
-
-So what are you waiting for, download this activator and check out the code!
+and there we have the application all wired together.
 
 ## Screenshots
-Bellow are screenshots of the activator running, showing the Create User form and the List users pages.
+Bellow are screenshots of the activator running, showing the Create User form and the List Users pages.
 
 create User
 
@@ -298,7 +292,16 @@ Play is a high-productivity web-framework with a great Scala api, making it easy
 
 [Play 2 Framework](http://www.playframework.com/documentation/2.2.x/Home)
 
+### Try it out
 
+Download the Acivator or clone the project and execute the following in a terminal from inside the project  
+
+```
+> play run
+```
+and Play will compile the CoffeeScript and launch a webserver on localhost:9000, `play run` is wrapping SBT and so gives us "hot compile" of the code for seemless web development, so saved changes are instantly reflected on the browser.
+
+So what are you waiting for, download this activator and check out the code!
 
 The code is available to download or fork [here](http://github.com/lashford/modern-web-template/), please feel free to raise issues and submit enhancements via pull requests.
 
