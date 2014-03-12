@@ -169,7 +169,7 @@ And there we have it, execute the following from inside the project
 ```
 > play run
 ```
-and Play will compile the CoffeeScript and launch a websever on localhost:9000, `play run` is wrapping SBT and so gives us "hot compile" of the code for seemless web development.
+and Play will compile the CoffeeScript and launch a webserver on localhost:9000, `play run` is wrapping SBT and so gives us "hot compile" of the code for seemless web development.
 
 ## Screenshots
 Bellow are screenshots of the activator running, showing the Create User form and the List users pages.
@@ -184,7 +184,7 @@ List Users
 
 ## Developement Setup
 
-To run the activator locally you will need to setup a few things, please see the readme for prerequisites [Instructions](http://github.com/lashford/modern-web-template/blob/master/README.md)
+To run the activator locally you will need to setup a few things, please see the readme for prerequisite [Instructions](http://github.com/lashford/modern-web-template/blob/master/README.md)
 
 ##Summary
 
