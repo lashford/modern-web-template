@@ -118,8 +118,48 @@ http://localhost:9000/user
 
 ### Angular App
 
-...TBD
+So lets discuss how the Angular code hangs together in CoffeeScript, take a look at `app.coffee`
 
+```
+dependencies = [
+    'ngRoute',
+    'ui.bootstrap',
+    'myApp.filters',
+    'myApp.services',
+    'myApp.controllers',
+    'myApp.directives',
+    'myApp.common',
+    'myApp.routeConfig'
+]
+app = angular.module('myApp', dependencies)
+angular.module('myApp.routeConfig', ['ngRoute'])
+    .config ($routeProvider) ->
+        $routeProvider
+            .when('/', {
+                templateUrl: '/assets/partials/view.html'
+            })
+            .when('/users/create', {
+                templateUrl: '/assets/partials/create.html'
+            })
+            .otherwise({redirectTo: '/'})
+
+@commonModule = angular.module('myApp.common', [])
+@controllersModule = angular.module('myApp.controllers', [])
+@servicesModule = angular.module('myApp.services', [])
+@modelsModule = angular.module('myApp.models', [])
+@directivesModule = angular.module('myApp.directives', [])
+@filtersModule = angular.module('myApp.filters', [])
+
+```
+
+This is where we are pluging the different modules together, notice at the bottom of the file we are creating globally
+scoped variables which gives us access the appropriate modules, anywhere in the app.  This allows us to register for example a controller see `UserCtrl.coffee`
+
+```
+class UserCtrl
+...
+controllersModule.controller('UserCtrl', UserCtrl)
+```
 
 
 ### Serving Angular from a single page.
