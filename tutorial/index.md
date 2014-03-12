@@ -47,7 +47,7 @@ Play is a high-productivity web-framework with a great Scala api, making it easy
 ##Structure
 So lets get down to it and allow me to begin, by showing the overall structure of the application we are building.
 
-![Overall structure](tutorial/overview.png)
+![Overall structure](/overview.png)
 
 So now we know the components lets see how they all fit together:
 
@@ -174,9 +174,9 @@ and Play will compile the CoffeeScript and launch a websever on localhost:9000, 
 ## Screenshots
 Bellow are screenshots of the activator running, showing the Create User form and the List users pages.  
 
-![User Creation](tutorial/create.png)
+![User Creation](/create.png)
 
-![View Users](tutorial/view.png)
+![View Users](/view.png)
 
 ## Developement Setup
 
