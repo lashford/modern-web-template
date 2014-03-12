@@ -47,7 +47,7 @@ Play is a high-productivity web-framework with a great Scala api, making it easy
 ##Structure
 So lets get down to it and allow me to begin, by showing the overall structure of the application we are building.
 
-![Overall structure](/overview.png)
+![Overall structure](https://github.com/lashford/modern-web-template/blob/master/tutorial/overview.png)
 
 So now we know the components lets see how they all fit together:
 
@@ -174,9 +174,9 @@ and Play will compile the CoffeeScript and launch a websever on localhost:9000, 
 ## Screenshots
 Bellow are screenshots of the activator running, showing the Create User form and the List users pages.  
 
-![User Creation](/create.png)
+![User Creation](https://github.com/lashford/modern-web-template/blob/master/tutorial/create.png)
 
-![View Users](/view.png)
+![View Users](https://github.com/lashford/modern-web-template/blob/master/tutorial/view.png)
 
 ## Developement Setup
 
