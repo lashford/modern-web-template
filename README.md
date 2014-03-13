@@ -55,3 +55,5 @@ This should fetch all the dependencies and start a Web Server listening on *loca
 (Server started, use Ctrl+D to stop and go back to the console...)
 
 ```
+
+Note: This will create a MongoDB Collection for you automatically, a free-be from the Driver! 
