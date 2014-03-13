@@ -1,10 +1,10 @@
 
 #Modern-web-applictation 
 
-This application shows how to build a 'modern' web application, comprising of a Client-side Javascript App built using ``AngularJS`` wrote in ``CoffeeScript``, served from the ``Play 2 Framework`` and using document persistence with ``Reactive Mongo`` a non-blocking Scala client for ``MongoDB``.
+This application shows how to build a 'modern' web application, comprising of a Client-side JavaScript App built using ``AngularJS`` wrote in ``CoffeeScript``, served from the ``Play 2 Framework`` and using document persistence with ``Reactive Mongo`` a non-blocking Scala client for ``MongoDB``.
 
 Sounds like a cool stack, well I think so!  In this tutorial I'm going to cover how to structure an AngularJS app,
-expose a Rest Api in Play and Read/Write JSON Documents in MongoDB.  By the end we will have created a simple User
+expose a Rest Api in Play and read/write JSON Documents in MongoDB.  By the end we will have created a simple User
 management app which gives a thin slice of Entity management, collecting data in the AngularJS app and persisting in MongoDB.
 
 So lets get down to it by seeing the overall structure of the application we are building.
@@ -15,7 +15,7 @@ So now we know the components, lets see how they all fit together...
 
 ###MongoDB integration
 
-I opted to use the Reactive Mongo driver to give me scalability with an asycrhonous, non-blocking interface to MongoDB.  The guys over at [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo) have made this integration even easier with a Play 2 plugin.
+I opted to use the Reactive Mongo driver to give me scalability with an asynchronous, non-blocking interface to MongoDB.  The guys over at [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo) have made this integration even easier with a Play 2 plugin.
 
 Adding the plugin to an app is simples...
 
@@ -39,13 +39,13 @@ Moving on, add the following to your [conf/play.plugins](https://github.com/lash
 400:play.modules.reactivemongo.ReactiveMongoPlugin
 ```
 
-Now that you have the ``RactiveMongoPlugin`` added, you can mix-in the `MongoController` trait to your controller
+Now that you have the ``RactiveMongoPlugin`` added, you can mix-in the `MongoController` trait to your controllers. In our app, it is just the `Users`:
 
 ```scala
 class Users extends Controller with MongoController
 ```
 
-The ``MongoController`` trait provides convenient functions exposed by the ``ReactiveMongoPlugin``; for example providing us with nice handling of the JSON objects and a friendly wraper to MongoDB.
+The ``MongoController`` trait provides convenient functions exposed by the ``ReactiveMongoPlugin``; for example providing us with nice handling of the JSON objects and a friendly wrapper to MongoDB.
 
 With all that, we can implement the `createUser` function to write the User JSON object to MongoDB, notice the conversion from raw JSON to the `User` object.
 
@@ -105,7 +105,7 @@ POST    /user                       @controllers.Users.createUser
 
 At this point you will be able to execute `play run` which would start a http server running on port 9000, this will expose the endpoints for creating and listing users.
 
-Using your favourtie Rest Client you can now test the endpoints by posting some JSON.  If your Using [PostMan](http://www.getpostman.com/) I have shared the JSON Collection [here](https://www.getpostman.com/collections/4b4d157ab081de7b828e). 
+Using your favourite Rest Client you can now test the endpoints by posting some JSON.  If your Using [PostMan](http://www.getpostman.com/) I have shared the JSON Collection [here](https://www.getpostman.com/collections/4b4d157ab081de7b828e). 
 
 Create a user:
 
@@ -128,9 +128,9 @@ This gives us the back-end to our application, now lets create a UI to consume t
 
 ### AngularJS App
 
-AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application, after playing with this activator I suggest doing some reading, the docs and learning material are pretty extensive and the comunity is very active.  I'll run you through the key points of how the code hangs together in CoffeeScript, so lets start by taking a look at `app.coffee`
+AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application. After playing with this Activator, I suggest doing some reading, the docs and learning material are pretty extensive and the community is very active.  I'll run you through the key points of how the code hangs together in CoffeeScript. Let’s start by taking a look at `app.coffee`
 
-```coffee
+```scala
 dependencies = [
     'ngRoute',
     'ui.bootstrap',
@@ -152,7 +152,6 @@ angular.module('myApp.routeConfig', ['ngRoute'])
                 templateUrl: '/assets/partials/create.html'
             })
             .otherwise({redirectTo: '/'})
-
 @commonModule = angular.module('myApp.common', [])
 @controllersModule = angular.module('myApp.controllers', [])
 @servicesModule = angular.module('myApp.services', [])
@@ -162,9 +161,9 @@ angular.module('myApp.routeConfig', ['ngRoute'])
 
 ```
 
-This is where we are pluging the different modules together, notice at the bottom of the file we are creating globally scoped variables which gives us access the appropriate modules anywhere in the app. This allows us to register for example a controller see [UserCtrl.coffee](https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserCtrl.coffee)
+This is where we are plugging the different modules together, notice at the bottom of the file we are creating globally scoped variables which gives us access the appropriate modules anywhere in the app. This allows us to register for example a controller see [UserCtrl.coffee](https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserCtrl.coffee)
 
-```coffee
+```scala
 class UserCtrl
 	constructor: (@$log, @UserService) ->
     	@$log.debug "constructing UserController"
@@ -173,9 +172,9 @@ class UserCtrl
 controllersModule.controller('UserCtrl', UserCtrl)
 ```
 
-or a service [UserService.coffee](https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserService.coffee)
+I use the same approach to register a service [UserService.coffee](https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserService.coffee)
  
-```coffee
+```scala
 class UserService
     constructor: (@$log, @$http, @$q) ->
         @$log.debug "constructing UserService"
@@ -183,7 +182,7 @@ class UserService
 servicesModule.service('UserService', UserService)
 ```
 
-Defining these classes at global scope allows AngularJS to do its magic with dependency injection, from the `UserCtrl` I want access to the `UserService` so I can call the Play REST API.  By declaring the ``UserService`` as a contructor dependency AngularJS will look for the user service to inject when constructing the controller.  This gives us the benefits of DI with the ability to test and mock out services, testing components in isolation.
+Defining these classes at global scope allows AngularJS to do its magic with dependency injection. From the `UserCtrl`, I want access to the `UserService` so I can call the Play REST API.  By declaring the ``UserService`` as a constructor dependency, AngularJS will look for the thing registered using the name `UserService` to inject when constructing the controller.  This gives us the benefits of DI with the ability to test and mock out services, testing components in isolation.
 
 Note that the name of the service *DOES* matter here as the name in quotes will be used when looking up the reference in AngularJS.
 
@@ -227,13 +226,15 @@ Now we can add a routes entry and a controller to serve this single page, [Route
 ```
 
 ```scala
+class Application extends Controller {
    def index = Action {
       logger.info("Serving index page...")
       Ok(views.html.index())
    }
+}
 ```
 
-And there we have the application all wired together!
+And there we have the application all wired together.
 
 ## Screenshots
 Bellow are screenshots of the activator running, showing the *Create User* form and the *List Users* pages.
@@ -256,9 +257,9 @@ So why the tech choices?
 
 ### AngularJS & CoffeeScript
 
-AngularJs is a client side MVC style framework written in Javascript. The framework adapts and extends traditional HTML to better serve dynamic content through two-way data-binding that allows for the automatic synchronization of models and views. As a result, AngularJS deemphasizes DOM manipulation and improves testability.
+AngularJs is a client side MVC style framework written in JavaScript. The framework adapts and extends traditional HTML to better serve dynamic content through two-way data-binding that allows for the automatic synchronisation of models and views. As a result, AngularJS de-emphasises DOM manipulation and improves testability.
 
-Traditionally AngularJS applications are wrote in Javascript, my main objection to javascript is its clunky Java esque syntax and its darn damand for all those bracaes.  So in steps CoffeeScript, 
+Traditionally AngularJS applications are written in JavaScript, my main objection to javascript is its clunky Java-esque syntax and its darn demand for all those braces.  So in steps CoffeeScript. 
 
 *CoffeeScript is a little language that compiles into JavaScript. Underneath that awkward Java-esque patina,
 JavaScript has always had a gorgeous heart. CoffeeScript is an attempt to expose the good parts of 
@@ -268,7 +269,7 @@ Read more about [CoffeeScript](http://coffeescript.org/) & [AngularJS](http://an
 
 ### BootstrapUI
 
-Well to be honest any CSS framework would do here, I quite like Bootstrap, its well supported and means I dont need to hand crank CSS.  Becasue well at the end of the day im not a web designer, I like Arial font, primary colours and simple layouts. :-) 
+Well to be honest any CSS framework would do here, I quite like Bootstrap, its well supported and means I don't need to hand crank CSS.  Because well at the end of the day I'm not a web designer, I like Arial font, primary colours and simple layouts.
 
 For more reading check out:
 
@@ -290,13 +291,13 @@ Play is a high-productivity web-framework with a great Scala api, making it easy
 
 ### Try it out
 
-Download the Acivator or clone the project and execute the following in a terminal from inside the project  
+Download the Activator or clone the project and execute the following in a terminal from inside the project  
 
 ```scala
 > play run
 ```
 
-and Play will compile the CoffeeScript and launch a webserver on ``localhost:9000``, ``play run`` is wrapping SBT and so gives us "hot compile" of the code for seemless web development, so saved changes are instantly reflected on the browser.
+and Play will compile the CoffeeScript and launch a webserver on ``localhost:9000``, ``play run`` is wrapping SBT and so gives us "hot compile" of the code for seamless web development, so saved changes are instantly reflected on the browser.
 
 So what are you waiting for, download this activator and check out the code!
 
