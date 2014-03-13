@@ -13,7 +13,7 @@ So lets get down to it by seeing the overall structure of the application we are
 
 So now we know the components, lets see how they all fit together...
 
-###MongoDB integration
+##MongoDB integration
 
 I opted to use the Reactive Mongo driver to give me scalability with an asynchronous, non-blocking interface to MongoDB.  The guys over at [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo) have made this integration even easier with a Play 2 plugin.
 
@@ -94,7 +94,7 @@ Head over to the [Users Controller](https://github.com/lashford/modern-web-templ
 
 And you're done. At this point you have the ability to write and read JSON documents to MongoDB from the controller.  Although a controller on its own is pretty useless without a wiring in the routes.
 
-### Play REST API
+## Play REST API
 
 Lets expose these methods as a REST endpoint in Play by adding the following line to [conf/routes](https://github.com/lashford/modern-web-template/blob/master/conf/routes)
 
@@ -126,7 +126,7 @@ HEADERS: Content-Type: application/json
 ```
 This gives us the back-end to our application, now lets create a UI to consume this API. 
 
-### AngularJS App
+## AngularJS App
 
 AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application. After playing with this Activator, I suggest doing some reading, the docs and learning material are pretty extensive and the community is very active.  I'll run you through the key points of how the code hangs together in CoffeeScript. Let’s start by taking a look at `app.coffee`
 
@@ -186,7 +186,7 @@ Defining these classes at global scope allows AngularJS to do its magic with dep
 
 Note that the name of the service *DOES* matter here as the name in quotes will be used when looking up the reference in AngularJS.
 
-### Serving AngularJS from a single page.
+## Serving AngularJS from a single page.
 
 So now we have the AngularJS app created we need to serve the index page from Play, which will provide the full AngularJS framework to the client browser.
 
