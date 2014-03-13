@@ -1,253 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
 <head>
     <title>Modern-web-applictation</title>
 </head>
 <body>
     <div>
+        <h2>Modern-web-applictation</h2>
         <p>This application shows how to build a 'modern' web application, comprising of a Client-side JavaScript App built using <code>AngularJS</code> wrote in <code>CoffeeScript</code>, served from the <code>Play 2 Framework</code> and using document persistence with <code>Reactive Mongo</code> a non-blocking Scala client for <code>MongoDB</code>.</p>
         <p>Sounds like a cool stack, well I think so In this tutorial I'm going to cover how to structure an AngularJS app, expose a Rest Api in Play and read/write JSON Documents in MongoDB. By the end we will have created a simple User management app which gives a thin slice of Entity management, collecting data in the AngularJS app and persisting in MongoDB.</p>
         <p>So lets get down to it by seeing the overall structure of the application we are building.</p>
         <p><img src="https://raw.github.com/lashford/modern-web-template/master/tutorial/overview.png" title="Overall structure"/></p>
         <p>So now we know the components, lets see how they all fit together...</p>
     </div>
-<div>
-<h2>MongoDB integration</h2>
-<p>I opted to use the Reactive Mongo driver to give me scalability with an asynchronous, non-blocking interface to MongoDB. The guys over at <a href="https://github.com/ReactiveMongo/Play-ReactiveMongo" target="_blank">Play-ReactiveMongo</a> have made this integration even easier with a Play 2 plugin.</p>
-<p>Adding the plugin to an app is simples...</p>
-<p>First, add the dependency - see <a href="https://github.com/lashford/modern-web-template/blob/master/project/build.scala" target="_blank">Build.scala</a></p>
-<code><pre>
-libraryDependencies ++= Seq(
-   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2"
-)
-</pre></code>
-<p>Once that's done, configure MongoDB in the app config - see <a href="https://github.com/lashford/modern-web-template/blob/master/conf/application.conf" target="_blank">application.conf</a></p>
-<code><pre>
-mongodb.uri = "mongodb://localhost:27017/modern-web-template"
-</pre></code>
-<p>Moving on, add the following to your <a href="https://github.com/lashford/modern-web-template/blob/master/conf/play.plugins" target="_blank">conf/play.plugins</a></p>
-<code><pre>
-400:play.modules.reactivemongo.ReactiveMongoPlugin
-</pre></code>
-<p>Now that you have the <code>RactiveMongoPlugin</code> added, you can mix-in the <code>MongoController</code> trait to your controllers. In our app, it is just the <code>Users</code></p>
-<code><pre>
-class Users extends Controller with MongoController
-</pre></code>
-<p>The <code>MongoController</code> trait provides convenient functions exposed by the <code>ReactiveMongoPlugin</code>; for example providing us with nice handling of the JSON objects and a friendly wrapper to MongoDB.</p>
-<p>With all that, we can implement the <code>createUser</code> function to write the User JSON object to MongoDB, notice the conversion from raw JSON to the <code>User</code> object.</p>
-<code><pre>
-def createUser = Action.async(parse.json) {
-   request =>
-     request.body.validate[User].map {
-       user =>
-         // `user` is an instance of the case class `models.User`
-         collection.insert(user).map {
-           lastError =>
-             logger.debug(s"Successfully inserted with LastError: $lastError")
-             Created(s"User Created")
+
+    <div>
+        <h2>MongoDB integration</h2>
+        <p>I opted to use the Reactive Mongo driver to give me scalability with an asynchronous, non-blocking interface to MongoDB. The guys over at <a href="https://github.com/ReactiveMongo/Play-ReactiveMongo" target="_blank">Play-ReactiveMongo</a> have made this integration even easier with a Play 2 plugin.</p>
+        <p>Adding the plugin to an app is simples...</p>
+        <p>First, add the dependency - see <a href="https://github.com/lashford/modern-web-template/blob/master/project/build.scala" target="_blank">Build.scala</a></p>
+        <code><pre>
+        libraryDependencies ++= Seq(
+           "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2"
+        )
+        </pre></code>
+        <p>Once that's done, configure MongoDB in the app config - see <a href="https://github.com/lashford/modern-web-template/blob/master/conf/application.conf" target="_blank">application.conf</a></p>
+        <code><pre>
+        mongodb.uri = "mongodb://localhost:27017/modern-web-template"
+        </pre></code>
+        <p>Moving on, add the following to your <a href="https://github.com/lashford/modern-web-template/blob/master/conf/play.plugins" target="_blank">conf/play.plugins</a></p>
+        <code><pre>
+        400:play.modules.reactivemongo.ReactiveMongoPlugin
+        </pre></code>
+        <p>Now that you have the <code>RactiveMongoPlugin</code> added, you can mix-in the <code>MongoController</code> trait to your controllers. In our app, it is just the <code>Users</code></p>
+        <code><pre>
+        class Users extends Controller with MongoController
+        </pre></code>
+        <p>The <code>MongoController</code> trait provides convenient functions exposed by the <code>ReactiveMongoPlugin</code>; for example providing us with nice handling of the JSON objects and a friendly wrapper to MongoDB.</p>
+        <p>With all that, we can implement the <code>createUser</code> function to write the User JSON object to MongoDB, notice the conversion from raw JSON to the <code>User</code> object.</p>
+        <code><pre>
+        def createUser = Action.async(parse.json) {
+           request =>
+             request.body.validate[User].map {
+               user =>
+                 // `user` is an instance of the case class `models.User`
+                 collection.insert(user).map {
+                   lastError =>
+                     logger.debug(s"Successfully inserted with LastError: $lastError")
+                     Created(s"User Created")
+                 }
+             }.getOrElse(Future.successful(BadRequest("invalid json")))
          }
-     }.getOrElse(Future.successful(BadRequest("invalid json")))
- }
-</pre></code>
-<p>Now that we can create users, we should really implement the <code>findUsers</code> function. It unsurprisingly creates a MongoDB query and return a list of <code>User</code>s as JSON.</p>
-<code><pre>
-def findUsers = Action.async {
-    // let's do our query
-    val cursor: Cursor[User] = collection.
-      // find all
-      find(Json.obj("active" -> true)).
-      // sort them by creation date
-      sort(Json.obj("created" -> -1)).
-      // perform the query and get a cursor of JsObject
-      cursor[User]
-    // gather all the JsObjects in a list
-    val futureUsersList: Future[List[User]] = cursor.collect[List]()
-    // transform the list into a JsArray
-    val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
-       Json.arr(users)
-    }
-    // everything's ok! Let's reply with the array
-    futurePersonsJsonArray.map {
-      users =>
-        Ok(users(0))
-    }
-}
-</pre></code>
-<p>Head over to the <a href="https://github.com/lashford/modern-web-template/blob/master/app/controllers/Users.scala" target="_blank">Users Controller</a> to see all the other details.</p>
-<p>And you're done. At this point you have the ability to write and read JSON documents to MongoDB from the controller. Although a controller on its own is pretty useless without a wiring in the routes.</p>
-</div>
-<div>
-<h2>Play REST API</h2>
-<p>Lets expose these methods as a REST endpoint in Play by adding the following line to <a href="https://github.com/lashford/modern-web-template/blob/master/conf/routes" target="_blank">conf/routes</a></p>
-<code><pre>
-GET     /users                      @controllers.Users.findUsers
-POST    /user                       @controllers.Users.createUser
-</pre></code>
-<p>At this point you will be able to execute <code>play run</code> which would start a http server running on port 9000, this will expose the endpoints for creating and listing users.</p>
-<p>Using your favourite Rest Client you can now test the endpoints by posting some JSON. If your Using <a href="http://www.getpostman.com/" target="_blank">PostMan</a> I have shared the JSON Collection <a href="https://www.getpostman.com/collections/4b4d157ab081de7b828e" target="_blank">here</a>. </p>
-<p>Create a user</p>
-<code><pre>
-POST -> http://localhost:9000/user
-HEADERS: Content-Type: application/json
-BODY: 
-{ "age": 44,
- "firstName": "jan",
- "lastName": "joe",
- "active": true}
-</pre></code>
-<p>List the users</p>
-<code><pre>
-GET  -> http://localhost:9000/users
-HEADERS: Content-Type: application/json
-</pre></code>
-<p>This gives us the back-end to our application, now lets create a UI to consume this API. </p>
-</div>
-<div>
-<h2>AngularJS App</h2>
-<p>AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application. After playing with this Activator, I suggest doing some reading, the docs and learning material are pretty extensive and the community is very active. I'll run you through the key points of how the code hangs together in CoffeeScript. Let’s start by taking a look at <code>app.coffee</code></p>
-<code><pre>
-dependencies = [
-    'ngRoute',
-    'ui.bootstrap',
-    'myApp.filters',
-    'myApp.services',
-    'myApp.controllers',
-    'myApp.directives',
-    'myApp.common',
-    'myApp.routeConfig'
-]
-app = angular.module('myApp', dependencies)
-angular.module('myApp.routeConfig', ['ngRoute'])
-    .config ($routeProvider) ->
-        $routeProvider
-            .when('/', {
-                templateUrl: '/assets/partials/view.html'
-            })
-            .when('/users/create', {
-                templateUrl: '/assets/partials/create.html'
-            })
-            .otherwise({redirectTo: '/'})
-@commonModule = angular.module('myApp.common', [])
-@controllersModule = angular.module('myApp.controllers', [])
-@servicesModule = angular.module('myApp.services', [])
-@modelsModule = angular.module('myApp.models', [])
-@directivesModule = angular.module('myApp.directives', [])
-@filtersModule = angular.module('myApp.filters', [])
+        </pre></code>
+        <p>Now that we can create users, we should really implement the <code>findUsers</code> function. It unsurprisingly creates a MongoDB query and return a list of <code>User</code>s as JSON.</p>
+        <code><pre>
+        def findUsers = Action.async {
+            // let's do our query
+            val cursor: Cursor[User] = collection.
+              // find all
+              find(Json.obj("active" -> true)).
+              // sort them by creation date
+              sort(Json.obj("created" -> -1)).
+              // perform the query and get a cursor of JsObject
+              cursor[User]
+            // gather all the JsObjects in a list
+            val futureUsersList: Future[List[User]] = cursor.collect[List]()
+            // transform the list into a JsArray
+            val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
+               Json.arr(users)
+            }
+            // everything's ok! Let's reply with the array
+            futurePersonsJsonArray.map {
+              users =>
+                Ok(users(0))
+            }
+        }
+        </pre></code>
+        <p>Head over to the <a href="https://github.com/lashford/modern-web-template/blob/master/app/controllers/Users.scala" target="_blank">Users Controller</a> to see all the other details.</p>
+        <p>And you're done. At this point you have the ability to write and read JSON documents to MongoDB from the controller. Although a controller on its own is pretty useless without a wiring in the routes.</p>
+    </div>
+    <div>
+        <h2>Play REST API</h2>
+        <p>Lets expose these methods as a REST endpoint in Play by adding the following line to <a href="https://github.com/lashford/modern-web-template/blob/master/conf/routes" target="_blank">conf/routes</a></p>
+        <code><pre>
+        GET     /users                      @controllers.Users.findUsers
+        POST    /user                       @controllers.Users.createUser
+        </pre></code>
+        <p>At this point you will be able to execute <code>play run</code> which would start a http server running on port 9000, this will expose the endpoints for creating and listing users.</p>
+        <p>Using your favourite Rest Client you can now test the endpoints by posting some JSON. If your Using <a href="http://www.getpostman.com/" target="_blank">PostMan</a> I have shared the JSON Collection <a href="https://www.getpostman.com/collections/4b4d157ab081de7b828e" target="_blank">here</a>. </p>
+        <p>Create a user</p>
+        <code><pre>
+        POST -> http://localhost:9000/user
+        HEADERS: Content-Type: application/json
+        BODY:
+        { "age": 44,
+         "firstName": "jan",
+         "lastName": "joe",
+         "active": true}
+        </pre></code>
+        <p>List the users</p>
+        <code><pre>
+        GET  -> http://localhost:9000/users
+        HEADERS: Content-Type: application/json
+        </pre></code>
+        <p>This gives us the back-end to our application, now lets create a UI to consume this API. </p>
+    </div>
+    <div>
+        <h2>AngularJS App</h2>
+        <p>AngularJS is pretty awesome but is a bit of a mind shift from a traditional web application. After playing with this Activator, I suggest doing some reading, the docs and learning material are pretty extensive and the community is very active. I'll run you through the key points of how the code hangs together in CoffeeScript. Let’s start by taking a look at <code>app.coffee</code></p>
+        <code><pre>
+        dependencies = [
+            'ngRoute',
+            'ui.bootstrap',
+            'myApp.filters',
+            'myApp.services',
+            'myApp.controllers',
+            'myApp.directives',
+            'myApp.common',
+            'myApp.routeConfig'
+        ]
+        app = angular.module('myApp', dependencies)
+        angular.module('myApp.routeConfig', ['ngRoute'])
+            .config ($routeProvider) ->
+                $routeProvider
+                    .when('/', {
+                        templateUrl: '/assets/partials/view.html'
+                    })
+                    .when('/users/create', {
+                        templateUrl: '/assets/partials/create.html'
+                    })
+                    .otherwise({redirectTo: '/'})
+        @commonModule = angular.module('myApp.common', [])
+        @controllersModule = angular.module('myApp.controllers', [])
+        @servicesModule = angular.module('myApp.services', [])
+        @modelsModule = angular.module('myApp.models', [])
+        @directivesModule = angular.module('myApp.directives', [])
+        @filtersModule = angular.module('myApp.filters', [])
+        </pre></code>
+        <p>This is where we are plugging the different modules together, notice at the bottom of the file we are creating globally scoped variables which gives us access the appropriate modules anywhere in the app. This allows us to register for example a controller see <a href="https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserCtrl.coffee" target="_blank">UserCtrl.coffee</a></p>
+        <code><pre>
+        class UserCtrl
+            constructor: (@$log, @UserService) ->
+                @$log.debug "constructing UserController"
+                @users = []
+            ...
+        controllersModule.controller('UserCtrl', UserCtrl)
+        </pre></code>
+        <p>I use the same approach to register a service <a href="https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserService.coffee" target="_blank">UserService.coffee</a></p>
+        <code><pre>
+        class UserService
+            constructor: (@$log, @$http, @$q) ->
+                @$log.debug "constructing UserService"
+        ...
+        servicesModule.service('UserService', UserService)
+        </pre></code>
+        <p>Defining these classes at global scope allows AngularJS to do its magic with dependency injection. From the <code>UserCtrl</code>, I want access to the <code>UserService</code> so I can call the Play REST API. By declaring the <code>UserService</code> as a constructor dependency, AngularJS will look for the thing registered using the name <code>UserService</code> to inject when constructing the controller. This gives us the benefits of DI with the ability to test and mock out services, testing components in isolation.</p>
+        <p>Note that the name of the service <em>DOES</em> matter here as the name in quotes will be used when looking up the reference in AngularJS.</p>
+    </div>
+    <div>
+        <h2>Serving AngularJS from a single page.</h2>
+        <p>So now we have the AngularJS app created we need to serve the index page from Play, which will provide the full AngularJS framework to the client browser.</p>
+        <p>Create an <code>index.scala.html</code> template page where you can define the AngularJS directives and include the required JavaScript libraries.</p>
+        <code><pre>
+        &lt;!doctype html&gt;
+        &lt;html lang="en" ng-app="myApp"&gt;
 
-</pre></code>
-<p>This is where we are plugging the different modules together, notice at the bottom of the file we are creating globally scoped variables which gives us access the appropriate modules anywhere in the app. This allows us to register for example a controller see <a href="https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserCtrl.coffee" target="_blank">UserCtrl.coffee</a></p>
-<code><pre>
-class UserCtrl
-	constructor: (@$log, @UserService) ->
-    	@$log.debug "constructing UserController"
-    	@users = []
-	...
-controllersModule.controller('UserCtrl', UserCtrl)
-</pre></code>
-<p>I use the same approach to register a service <a href="https://github.com/lashford/modern-web-template/blob/master/app/assets/javascripts/users/UserService.coffee" target="_blank">UserService.coffee</a></p>
-<code><pre>
-class UserService
-    constructor: (@$log, @$http, @$q) ->
-        @$log.debug "constructing UserService"
-...
-servicesModule.service('UserService', UserService)
-</pre></code>
-<p>Defining these classes at global scope allows AngularJS to do its magic with dependency injection. From the <code>UserCtrl</code>, I want access to the <code>UserService</code> so I can call the Play REST API. By declaring the <code>UserService</code> as a constructor dependency, AngularJS will look for the thing registered using the name <code>UserService</code> to inject when constructing the controller. This gives us the benefits of DI with the ability to test and mock out services, testing components in isolation.</p>
-<p>Note that the name of the service <em>DOES</em> matter here as the name in quotes will be used when looking up the reference in AngularJS.</p>
-</div>
-<div>
-<h2>Serving AngularJS from a single page.</h2>
-<p>So now we have the AngularJS app created we need to serve the index page from Play, which will provide the full AngularJS framework to the client browser.</p>
-<p>Create an <code>index.scala.html</code> template page where you can define the AngularJS directives and include the required JavaScript libraries.</p>
-<code><pre>
-&lt;!doctype html&gt;
-&lt;html lang="en" ng-app="myApp"&gt;
+        &lt;body&gt;
+          &lt;div ng-view&gt;&lt;/div&gt;
+        &lt;/body&gt;
 
-&lt;body&gt;
-  &lt;div ng-view&gt;&lt;/div&gt;
-&lt;/body&gt;
+        &lt;script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/vendor/ui-bootstrap-tpls-0.10.0.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/main.js")' type="text/javascript"&gt;&lt;/script&gt;
 
-&lt;script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/vendor/ui-bootstrap-tpls-0.10.0.js")' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/main.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/common/Config.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/directives/AppVersion.js")' type="text/javascript"&gt;&lt;/script&gt;
 
-&lt;script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/common/Config.js")' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/directives/AppVersion.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/users/UserService.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/users/UserCtrl.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;script src='@routes.Assets.at("javascripts/users/CreateUserCtrl.js")' type="text/javascript"&gt;&lt;/script&gt;
 
-&lt;script src='@routes.Assets.at("javascripts/users/UserService.js")' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/users/UserCtrl.js")' type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src='@routes.Assets.at("javascripts/users/CreateUserCtrl.js")' type="text/javascript"&gt;&lt;/script&gt;
+        &lt;/html&gt;
+        </pre></code>
+        <p>Notice here we have added the <code>ng-app</code> directive to the <code>html</code> tag, this binds the AngularJS app to this page and when loaded will construct the app for us. Each of the CoffeeScript files are compiled into individual JavaScript files that need adding as resources to the single page.</p>
+        <p>Now we can add a routes entry and a controller to serve this single page, <a href="https://github.com/lashford/modern-web-template/blob/master/conf/routes" target="_blank">Routes</a> <a href="https://github.com/lashford/modern-web-template/blob/master/app/controllers/Application.scala" target="_blank">Controller</a></p>
+        <code><pre>
+           GET     /       @controllers.Application.index
+        </pre></code>
+        <code><pre>
+        class Application extends Controller {
+           def index = Action {
+              logger.info("Serving index page...")
+              Ok(views.html.index())
+           }
+        }
+        </pre></code>
+        <p>And there we have the application all wired together.</p>
+    </div>
+    <div>
+        <h2>Screenshots</h2>
+        <p>Bellow are screenshots of the activator running, showing the <em>Create User</em> form and the <em>List Users</em> pages.</p>
+        <p>Create User</p>
+        <p><img src="https://raw.github.com/lashford/modern-web-template/master/tutorial/create.png" title="User Creation"/></p>
+        <p>List Users</p>
+        <p><img src="https://raw.github.com/lashford/modern-web-template/master/tutorial/view.png" title="View Users"/></p>
+    </div>
+    <div>
+        <h2>Developement Setup</h2>
+        <p>To run the activator locally you will need to setup a few things, please see the readme for prerequisite <a href="http://github.com/lashford/modern-web-template/blob/master/README.md" target="_blank">Instructions</a></p>
+    </div>
+    <div>
+        <h2>Summary</h2>
+        <p>So why the tech choices?</p>
+        <h3>AngularJS  CoffeeScript</h3>
+        <p>AngularJs is a client side MVC style framework written in JavaScript. The framework adapts and extends traditional HTML to better serve dynamic content through two-way data-binding that allows for the automatic synchronisation of models and views. As a result, AngularJS de-emphasises DOM manipulation and improves testability.</p>
+        <p>Traditionally AngularJS applications are written in JavaScript, my main objection to javascript is its clunky Java-esque syntax and its darn demand for all those braces. So in steps CoffeeScript. </p>
+        <p><em>CoffeeScript is a little language that compiles into JavaScript. Underneath that awkward Java-esque patina, JavaScript has always had a gorgeous heart. CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.</em></p>
+        <p>Read more about <a href="http://coffeescript.org/" target="_blank">CoffeeScript</a>  <a href="http://angularjs.org/" target="_blank">AngularJS</a></p>
 
-&lt;/html&gt;
-</pre></code>
-<p>Notice here we have added the <code>ng-app</code> directive to the <code>html</code> tag, this binds the AngularJS app to this page and when loaded will construct the app for us. Each of the CoffeeScript files are compiled into individual JavaScript files that need adding as resources to the single page.</p>
-<p>Now we can add a routes entry and a controller to serve this single page, <a href="https://github.com/lashford/modern-web-template/blob/master/conf/routes" target="_blank">Routes</a> <a href="https://github.com/lashford/modern-web-template/blob/master/app/controllers/Application.scala" target="_blank">Controller</a></p>
-<code><pre>
-   GET     /       @controllers.Application.index
-</pre></code>
-<code><pre>
-class Application extends Controller {
-   def index = Action {
-      logger.info("Serving index page...")
-      Ok(views.html.index())
-   }
-}
-</pre></code>
-<p>And there we have the application all wired together.</p>
-</div>
-<div>
-<h2>Screenshots</h2>
-<p>Bellow are screenshots of the activator running, showing the <em>Create User</em> form and the <em>List Users</em> pages.</p>
-<p>Create User</p>
-<p><img src="https://raw.github.com/lashford/modern-web-template/master/tutorial/create.png" title="User Creation"/></p>
-<p>List Users</p>
-<p><img src="https://raw.github.com/lashford/modern-web-template/master/tutorial/view.png" title="View Users"/></p>
-</div>
-<div>
-<h2>Developement Setup</h2>
-<p>To run the activator locally you will need to setup a few things, please see the readme for prerequisite <a href="http://github.com/lashford/modern-web-template/blob/master/README.md" target="_blank">Instructions</a></p>
-</div>
-<div>
-<h2>Summary</h2>
-<p>So why the tech choices?</p>
-</div>
-<div>
-<h3>AngularJS  CoffeeScript</h3>
-<p>AngularJs is a client side MVC style framework written in JavaScript. The framework adapts and extends traditional HTML to better serve dynamic content through two-way data-binding that allows for the automatic synchronisation of models and views. As a result, AngularJS de-emphasises DOM manipulation and improves testability.</p>
-<p>Traditionally AngularJS applications are written in JavaScript, my main objection to javascript is its clunky Java-esque syntax and its darn demand for all those braces. So in steps CoffeeScript. </p>
-<p><em>CoffeeScript is a little language that compiles into JavaScript. Underneath that awkward Java-esque patina, JavaScript has always had a gorgeous heart. CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.</em></p>
-<p>Read more about <a href="http://coffeescript.org/" target="_blank">CoffeeScript</a>  <a href="http://angularjs.org/" target="_blank">AngularJS</a></p>
-</div>
-<div>
-<h3>BootstrapUI</h3>
-<p>Well to be honest any CSS framework would do here, I quite like Bootstrap, its well supported and means I don't need to hand crank CSS. Because well at the end of the day I'm not a web designer, I like Arial font, primary colours and simple layouts.</p>
-<p>For more reading check out</p>
-<p><a href="http://angular-ui.github.io/bootstrap/" target="_blank">AngularJS Bootstrap</a> Or <a href="http://foundation.zurb.com/" target="_blank">Zorb Foundation</a></p>
-</div>
-<div>
-<h3>MongoDb</h3>
-<p>MongoDB (from "humongous") is an open-source document database, and the leading NoSQL database. Its schema free design make it highly scalable, cost effective and more. MongoDB enables profound developer agility through its flexible data model. </p>
-<p><a href="http://www.mongodb.com" target="_blank">MongoDb</a></p>
-</div>
-<div>
-<h3>Play 2 Framework  Scala</h3>
-<p>Play is a high-productivity web-framework with a great Scala api, making it easy to create modern, reactive web applications</p>
-<p><a href="http://www.playframework.com/documentation/2.2.x/Home" target="_blank">Play 2 Framework</a></p>
-</div>
-<div>
-<h3>Try it out</h3>
-<p>Download the Activator or clone the project and execute the following in a terminal from inside the project </p>
-<code><pre>
-> play run
-</pre></code>
-<p>and Play will compile the CoffeeScript and launch a webserver on <code>localhost:9000</code>, <code>play run</code> is wrapping SBT and so gives us "hot compile" of the code for seamless web development, so saved changes are instantly reflected on the browser.</p>
-<p>So what are you waiting for, download this activator and check out the code</p>
-<p>The code is available to download or fork <a href="http://github.com/lashford/modern-web-template/" target="_blank">here</a>, please feel free to raise issues and submit enhancements via pull requests.</p>
-<p>That's all folks, enjoy...</p>
-</div>
-<div>
-<h4>Alex Lashford</h4>
-</div>
+        <h3>BootstrapUI</h3>
+        <p>Well to be honest any CSS framework would do here, I quite like Bootstrap, its well supported and means I don't need to hand crank CSS. Because well at the end of the day I'm not a web designer, I like Arial font, primary colours and simple layouts.</p>
+        <p>For more reading check out</p>
+        <p><a href="http://angular-ui.github.io/bootstrap/" target="_blank">AngularJS Bootstrap</a> Or <a href="http://foundation.zurb.com/" target="_blank">Zorb Foundation</a></p>
+
+        <h3>MongoDb</h3>
+        <p>MongoDB (from "humongous") is an open-source document database, and the leading NoSQL database. Its schema free design make it highly scalable, cost effective and more. MongoDB enables profound developer agility through its flexible data model. </p>
+        <p><a href="http://www.mongodb.com" target="_blank">MongoDb</a></p>
+
+        <h3>Play 2 Framework  Scala</h3>
+        <p>Play is a high-productivity web-framework with a great Scala api, making it easy to create modern, reactive web applications</p>
+        <p><a href="http://www.playframework.com/documentation/2.2.x/Home" target="_blank">Play 2 Framework</a></p>
+
+        <h3>Try it out</h3>
+        <p>Download the Activator or clone the project and execute the following in a terminal from inside the project </p>
+        <code><pre>
+        > play run
+        </pre></code>
+        <p>and Play will compile the CoffeeScript and launch a webserver on <code>localhost:9000</code>, <code>play run</code> is wrapping SBT and so gives us "hot compile" of the code for seamless web development, so saved changes are instantly reflected on the browser.</p>
+        <p>So what are you waiting for, download this activator and check out the code</p>
+        <p>The code is available to download or fork <a href="http://github.com/lashford/modern-web-template/" target="_blank">here</a>, please feel free to raise issues and submit enhancements via pull requests.</p>
+        <p>That's all folks, enjoy...</p>
+        <h4>Alex Lashford</h4>
+    </div>
 </body>
 </html>
