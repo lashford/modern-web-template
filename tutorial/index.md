@@ -19,73 +19,75 @@ I opted to use the Reactive Mongo driver to give me scalability with an asycrhon
 
 Adding the plugin to an app is simples...
 
-1.  Add the dependency -> see [Build.scala](https://github.com/lashford/modern-web-template/blob/master/project/build.scala)
-    
-    ```
-    libraryDependencies ++= Seq(
-        "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2"
-    )
-    ```
+1. Add the dependency -> see [Build.scala](https://github.com/lashford/modern-web-template/blob/master/project/build.scala)
+
+   ```
+   libraryDependencies ++= Seq(
+       "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2"
+   )
+   ```
+
 2. Configure MongoDB in the app config -> see [application.conf](https://github.com/lashford/modern-web-template/blob/master/conf/application.conf)
 
-    ```
-    mongodb.uri = "mongodb://localhost:27017/modern-web-template"
-    ```
+   ```
+   mongodb.uri = "mongodb://localhost:27017/modern-web-template"
+   ```
+
 3. add the following to your [conf/play.plugins](https://github.com/lashford/modern-web-template/blob/master/conf/play.plugins)
-   
+
    ```
-        400:play.modules.reactivemongo.ReactiveMongoPlugin
+   400:play.modules.reactivemongo.ReactiveMongoPlugin
    ```
+
 4. mix-in the `MongoController` trait to your controller
-   
+
    ```
    class Users extends Controller with MongoController
    ```
-   This enables the MongoDB Plugin, providing us with nice handling of the JSON objects and a friendly wraper to MongoDB. 
+   This enables the MongoDB Plugin, providing us with nice handling of the JSON objects and a friendly wraper to MongoDB.
+
 5. Implement a `createUser` function to write the User JSON object to MongoDB, notice the conversion from raw JSON to the `User` object.
-   
+
    ```
-    def createUser = Action.async(parse.json) {
-       request =>
-         request.body.validate[User].map {
-           user =>
-             // `user` is an instance of the case class `models.User`
-             collection.insert(user).map {
-               lastError =>
-                 logger.debug(s"Successfully inserted with LastError: $lastError")
-                 Created(s"User Created")
-             }
-         }.getOrElse(Future.successful(BadRequest("invalid json")))
-     }
+   def createUser = Action.async(parse.json) {
+      request =>
+        request.body.validate[User].map {
+          user =>
+            // `user` is an instance of the case class `models.User`
+            collection.insert(user).map {
+              lastError =>
+                logger.debug(s"Successfully inserted with LastError: $lastError")
+                Created(s"User Created")
+            }
+        }.getOrElse(Future.successful(BadRequest("invalid json")))
+    }
    ```
 
 6. Implement a `findUsers` function, creating a MongoDB query and returning a list of Users as JSON.
 
-	```
-	 def findUsers = Action.async {
-        // let's do our query
-        val cursor: Cursor[User] = collection.
-          // find all
-          find(Json.obj("active" -> true)).
-          // sort them by creation date
-          sort(Json.obj("created" -> -1)).
-          // perform the query and get a cursor of JsObject
-          cursor[User]
-          
-        // gather all the JsObjects in a list
-        val futureUsersList: Future[List[User]] = cursor.collect[List]()
-
-        // transform the list into a JsArray
-        val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
-           Json.arr(users)
-        }
-        // everything's ok! Let's reply with the array
-        futurePersonsJsonArray.map {
-          users =>
-            Ok(users(0))
-        }
-     }
-	```
+   ```
+   def findUsers = Action.async {
+       // let's do our query
+       val cursor: Cursor[User] = collection.
+         // find all
+         find(Json.obj("active" -> true)).
+         // sort them by creation date
+         sort(Json.obj("created" -> -1)).
+         // perform the query and get a cursor of JsObject
+         cursor[User]
+       // gather all the JsObjects in a list
+       val futureUsersList: Future[List[User]] = cursor.collect[List]()
+       // transform the list into a JsArray
+       val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
+          Json.arr(users)
+       }
+       // everything's ok! Let's reply with the array
+       futurePersonsJsonArray.map {
+         users =>
+           Ok(users(0))
+       }
+   }
+   ```
 	
 see the full implementation of the *Users Controller* [here](https://github.com/lashford/modern-web-template/blob/master/app/controllers/Users.scala)
 
@@ -193,29 +195,28 @@ Create an index.scala.html template page where you can define the AngularJS Dire
 
 
 ```
-	<!doctype html>
-	<html lang="en" ng-app="myApp">
-	
-	<body>
-    	<div ng-view></div>
-	</body>
-	
-	<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js' type="text/javascript"></script>
-	<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/vendor/ui-bootstrap-tpls-0.10.0.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/main.js")' type="text/javascript"></script>
+<!doctype html>
+<html lang="en" ng-app="myApp">
 
-	<script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/common/Config.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/directives/AppVersion.js")' type="text/javascript"></script>
+<body>
+	<div ng-view></div>
+</body>
 
-	<script src='@routes.Assets.at("javascripts/users/UserService.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/users/UserCtrl.js")' type="text/javascript"></script>		
-	<script src='@routes.Assets.at("javascripts/users/CreateUserCtrl.js")' type="text/javascript"></script>
+<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js' type="text/javascript"></script>
+<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/vendor/ui-bootstrap-tpls-0.10.0.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/main.js")' type="text/javascript"></script>
 
-	</html>
+<script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/common/Config.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/directives/AppVersion.js")' type="text/javascript"></script>
+
+<script src='@routes.Assets.at("javascripts/users/UserService.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/users/UserCtrl.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/users/CreateUserCtrl.js")' type="text/javascript"></script>
+
+</html>
 ```
-
 
 Notice here we have added the **ng-app** directive to the html tag, this binds the AngularJS app to this page and when loaded will construct the app for us.  Each of the *CoffeeScript* files are compiled into individual Javascript files that need adding as resources to the single page.
 
