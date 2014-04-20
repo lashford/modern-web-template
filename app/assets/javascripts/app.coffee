@@ -22,6 +22,8 @@ angular.module('myApp.routeConfig', ['ngRoute'])
                 templateUrl: '/assets/partials/create.html'
             })
             .otherwise({redirectTo: '/'})
+    .config ($locationProvider) ->
+        $locationProvider.html5Mode(true)
 
 @commonModule = angular.module('myApp.common', [])
 @controllersModule = angular.module('myApp.controllers', [])
