@@ -15,8 +15,8 @@ fronted with Twitter bootstrap CSS framework, because well, im not a web designe
 * **CoffeeScript** - CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.
   *  [http://coffeescript.org/](http://coffeescript.org/)
 
-* **PlayFramework** - currently using 2.2.1 with the scala API
-  *  [PlayFramework Docs](http://www.playframework.com/documentation/2.2.x/Home)
+* **PlayFramework** - currently using 2.3.4 with the scala API
+  *  [PlayFramework Docs](http://www.playframework.com/documentation/2.3.x/Home)
 
 * **Guice** integration for Dependency injection,
   * Special thanks to the typesafehub team for their activator : [Play-Guice](http://www.typesafe.com/activator/template/play-guice)
@@ -36,7 +36,7 @@ Your development environment will require:
 Once the prerequisites have been installed, you will be able to execute the following from a terminal.
 
 ```
-../modern-web-template >  play run
+../modern-web-template >  sbt run
 ```
 
 This should fetch all the dependencies and start a Web Server listening on *localhost:9000*
@@ -56,4 +56,4 @@ This should fetch all the dependencies and start a Web Server listening on *loca
 
 ```
 
-Note: This will create a MongoDB Collection for you automatically, a free-be from the Driver! 
+Note: This will create a MongoDB Collection for you automatically, a freebie from the Driver!
