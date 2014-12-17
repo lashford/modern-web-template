@@ -2,6 +2,7 @@ package controllers
 
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.BSONObjectID
 import scala.concurrent.Future
 import reactivemongo.api.Cursor
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -52,6 +53,20 @@ class Users extends Controller with MongoController {
             lastError =>
               logger.debug(s"Successfully inserted with LastError: $lastError")
               Created(s"User Created")
+          }
+      }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
+  def updateUser(firstName: String, lastName: String) = Action.async(parse.json) {
+    request =>
+      request.body.validate[User].map {
+        user =>
+          // find our user by first name and last name
+          val nameSelector = Json.obj("firstName" -> firstName, "lastName" -> lastName)
+          collection.update(nameSelector, user).map {
+            lastError =>
+              logger.debug(s"Successfully updated with LastError: $lastError")
+              Created(s"User Updated")
           }
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
