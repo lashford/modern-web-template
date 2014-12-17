@@ -48,6 +48,33 @@ class UsersIT extends Specification {
       }
     }
 
-  }
+    "update a valid json" in {
+      running(FakeApplication()) {
+        val request = FakeRequest.apply(PUT, "/user/Jack/London").withJsonBody(Json.obj(
+          "firstName" -> "Jack",
+          "lastName" -> "London",
+          "age" -> 27,
+          "active" -> true))
+        val response = route(request)
+        response.isDefined mustEqual true
+        val result = Await.result(response.get, timeout)
+        result.header.status must equalTo(CREATED)
+      }
+    }
 
+    "fail updating a non valid json" in {
+      running(FakeApplication()) {
+        val request = FakeRequest.apply(PUT, "/user/Jack/London").withJsonBody(Json.obj(
+          "firstName" -> "Jack",
+          "lastName" -> "London",
+          "age" -> 27))
+        val response = route(request)
+        response.isDefined mustEqual true
+        val result = Await.result(response.get, timeout)
+        contentAsString(response.get) mustEqual "invalid json"
+        result.header.status mustEqual BAD_REQUEST
+      }
+    }
+
+  }
 }
