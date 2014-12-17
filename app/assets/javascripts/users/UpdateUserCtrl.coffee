@@ -19,7 +19,6 @@ class UpdateUserCtrl
             @$log.error "Unable to update User: #{error}"
       )
 
-  #
   findUser: () ->
       # route params must be same name as provided in routing url in app.coffee
       firstName = @$routeParams.firstName
