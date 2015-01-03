@@ -1,15 +1,12 @@
 
 
-    <div class="row" ng-controller="UserCtrl as uc">
-        &NonBreakingSpace;
+    <div ng-controller="UserCtrl as uc">
         <div class="jumbotron">
             <h2>A Modern Web Template</h2>
-
             <p class="pull-right">... a UI created using AngularJS and Bootstrap</p>
         </div>
 
-
-        <div class="row">
+        <div>
             <div class="form-group">
                 <h3>
                     Users
@@ -43,7 +40,7 @@
                         {{ usr.age }}
                     </td>
                     <td>
-                        <a ng-href="/#/users/edit/{{usr.firstName}}/{{usr.lastName}}" class="btn btn-success pull-right" id="btn_user_create">Edit User</a>
+                        <a ng-href="/#/users/edit/{{usr.firstName}}/{{usr.lastName}}" class="btn btn-success pull-right" id="btn_user_update">Edit User</a>
                     </td>
                 </tr>
                 <tr ng-hide="uc.users.length">
@@ -54,9 +51,18 @@
                 </tbody>
             </table>
 
+            <h3>
+                Debug
+            </h3>
             <hr>
-            <h4>Debug:</h4>
-            <pre>{{ uc.users | json }}</pre>
+            <accordion>
+                <accordion-group is-open="status.open">
+                    <accordion-heading>
+                        Json Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                    </accordion-heading>
+                    <pre>{{ uc.users | json }}</pre>
+                </accordion-group>
+            </accordion>
         </div>
 
     </div>

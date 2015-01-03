@@ -22,11 +22,14 @@ angular.module('myApp.routeConfig', ['ngRoute'])
                 templateUrl: '/assets/partials/create.html'
             })
             .when('/users/edit/:firstName/:lastName', {
-                templateUrl: 'assets/partials/update.html'
+                templateUrl: '/assets/partials/update.html'
             })
             .otherwise({redirectTo: '/'})
     .config ($locationProvider) ->
-        $locationProvider.html5Mode(true)
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        })
 
 @commonModule = angular.module('myApp.common', [])
 @controllersModule = angular.module('myApp.controllers', [])
