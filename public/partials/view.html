@@ -42,6 +42,9 @@
                     <td>
                         {{ usr.age }}
                     </td>
+                    <td>
+                        <a ng-href="/#/users/edit/{{usr.firstName}}/{{usr.lastName}}" class="btn btn-success pull-right" id="btn_user_create">Edit User</a>
+                    </td>
                 </tr>
                 <tr ng-hide="uc.users.length">
                     <td colspan="3">
