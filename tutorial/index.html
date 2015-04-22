@@ -17,10 +17,10 @@
         <h2>MongoDB integration</h2>
         <p>I opted to use the Reactive Mongo driver to give me scalability with an asynchronous, non-blocking interface to MongoDB. The guys over at <a href="https://github.com/ReactiveMongo/Play-ReactiveMongo" target="_blank">Play-ReactiveMongo</a> have made this integration even easier with a Play 2 plugin.</p>
         <p>Adding the plugin to an app is simples...</p>
-        <p>First, add the dependency - see <a href="https://github.com/lashford/modern-web-template/blob/master/project/build.scala" target="_blank">Build.scala</a></p>
+        <p>First, add the dependency - see <a href="https://github.com/lashford/modern-web-template/blob/master/build.sbt" target="_blank">build.sbt</a></p>
         <code><pre>
         libraryDependencies ++= Seq(
-           "org.reactivemongo" %% "play2-reactivemongo" % "0.10.2"
+           "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23"
         )
         </pre></code>
         <p>Once that's done, configure MongoDB in the app config - see <a href="https://github.com/lashford/modern-web-template/blob/master/conf/application.conf" target="_blank">application.conf</a></p>
