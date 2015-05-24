@@ -12,6 +12,10 @@ pipelineStages := Seq(uglify, digest, gzip)
 
 DigestKeys.algorithms += "sha1"
 
+UglifyKeys.uglifyOps := { js =>
+  Seq((js.sortBy(_._2), "concat.min.js"))
+}
+
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 

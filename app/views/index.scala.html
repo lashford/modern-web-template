@@ -1,3 +1,4 @@
+@(javascripts: Seq[String]) =>
 <!doctype html>
 <html lang="en" ng-app="myApp">
 <head>
@@ -49,14 +50,8 @@
 <script src='@routes.Assets.versioned("lib/angularjs/angular-route.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("lib/angular-ui-bootstrap/ui-bootstrap-tpls.js")' type="text/javascript"></script>
 
-<!-- Coffee script compilled resources-->
-<script src='@routes.Assets.versioned("javascripts/app.js")' type="text/javascript"></script>
-<script src='@routes.Assets.versioned("javascripts/common/Config.js")' type="text/javascript"></script>
-<script src='@routes.Assets.versioned("javascripts/directives/AppVersion.js")' type="text/javascript"></script>
-
-<script src='@routes.Assets.versioned("javascripts/users/UserService.js")' type="text/javascript"></script>
-<script src='@routes.Assets.versioned("javascripts/users/UserCtrl.js")' type="text/javascript"></script>
-<script src='@routes.Assets.versioned("javascripts/users/CreateUserCtrl.js")' type="text/javascript"></script>
-<script src='@routes.Assets.versioned("javascripts/users/UpdateUserCtrl.js")' type="text/javascript"></script>
-
+<!-- Coffee script compiled resources (generated) -->
+@for(script <- javascripts) {
+  <script src='@routes.Assets.versioned(script)' type="text/javascript"></script>
+}
 </html>
