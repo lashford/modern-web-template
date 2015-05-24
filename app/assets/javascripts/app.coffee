@@ -13,7 +13,7 @@ dependencies = [
 app = angular.module('myApp', dependencies)
 
 angular.module('myApp.routeConfig', ['ngRoute'])
-    .config ($routeProvider) ->
+    .config(['$routeProvider', ($routeProvider) ->
         $routeProvider
             .when('/', {
                 templateUrl: '/assets/partials/view.html'
@@ -24,12 +24,12 @@ angular.module('myApp.routeConfig', ['ngRoute'])
             .when('/users/edit/:firstName/:lastName', {
                 templateUrl: '/assets/partials/update.html'
             })
-            .otherwise({redirectTo: '/'})
-    .config ($locationProvider) ->
+            .otherwise({redirectTo: '/'})])
+    .config(['$locationProvider', ($locationProvider) ->
         $locationProvider.html5Mode({
             enabled: true,
             requireBase: false
-        })
+        })])
 
 @commonModule = angular.module('myApp.common', [])
 @controllersModule = angular.module('myApp.controllers', [])

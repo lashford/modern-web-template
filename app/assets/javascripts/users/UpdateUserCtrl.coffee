@@ -38,4 +38,4 @@ class UpdateUserCtrl
           @$log.error "Unable to get Users: #{error}"
       )
 
-controllersModule.controller('UpdateUserCtrl', UpdateUserCtrl)
+controllersModule.controller('UpdateUserCtrl', ['$log', '$location', '$routeParams', 'UserService', UpdateUserCtrl])

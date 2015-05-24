@@ -52,4 +52,4 @@ class UserService
             )
       deferred.promise
 
-servicesModule.service('UserService', UserService)
+servicesModule.service('UserService', ['$log', '$http', '$q', UserService])
