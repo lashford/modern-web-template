@@ -19,4 +19,4 @@ class CreateUserCtrl
                 @$log.error "Unable to create User: #{error}"
             )
 
-controllersModule.controller('CreateUserCtrl', CreateUserCtrl)
+controllersModule.controller('CreateUserCtrl', ['$log', '$location', 'UserService', CreateUserCtrl])
