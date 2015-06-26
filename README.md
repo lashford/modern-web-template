@@ -15,8 +15,8 @@ fronted with Twitter bootstrap CSS framework, because well, im not a web designe
 * **CoffeeScript** - CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.
   *  [http://coffeescript.org/](http://coffeescript.org/)
 
-* **PlayFramework** - currently using 2.3.4 with the scala API
-  *  [PlayFramework Docs](http://www.playframework.com/documentation/2.3.x/Home)
+* **PlayFramework** - currently using 2.3.9 with the scala API
+  *  [PlayFramework Docs](http://www.playframework.com/documentation/2.3.9/Home)
 
 * **Guice** integration for Dependency injection,
   * Special thanks to the typesafehub team for their activator : [Play-Guice](http://www.typesafe.com/activator/template/play-guice)
