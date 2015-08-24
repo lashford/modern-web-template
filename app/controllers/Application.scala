@@ -13,7 +13,7 @@ import play.api.mvc._
  * the application context is going to be responsible for creating it and wiring it up with the UUID generator service.
  * @param uuidGenerator the UUID generator service we wish to receive.
  */
-@Singleton
+
 class Application @Inject() (uuidGenerator: UUIDGenerator) extends Controller {
 
   private final val logger: Logger = LoggerFactory.getLogger(classOf[Application])
