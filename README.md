@@ -1,7 +1,7 @@
 Modern Web Template
 ===========
 
-**AngularJS - Scala - Play - Guice - PlayReactiveMongo**
+**AngularJS - Scala - Play - Scaladi - PlayReactiveMongo**
 
 A full application stack for a Modern Web application, lets review the components:
 
