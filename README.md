@@ -18,8 +18,8 @@ fronted with Twitter bootstrap CSS framework, because well, im not a web designe
 * **PlayFramework** - currently using 2.3.9 with the scala API
   *  [PlayFramework Docs](http://www.playframework.com/documentation/2.3.9/Home)
 
-* **Guice** integration for Dependency injection,
-  * Special thanks to the typesafehub team for their activator : [Play-Guice](http://www.typesafe.com/activator/template/play-guice)
+* **Scaladi** integration for Dependency injection,
+[Scaladi](http://scaldi.org/learn/)
 
 * **PlayReactiveMongo** gives interaction with MongoDB providing a non-blocking driver as well as some useful additions for handling JSON.
   * Check out their GitHub: [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo)
