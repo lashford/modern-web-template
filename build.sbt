@@ -1,4 +1,4 @@
-name := "modern-web-template"
+name := "Reactive POS"
 
 version := "0.1-SNAPSHOT"
 
