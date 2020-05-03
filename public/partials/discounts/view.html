@@ -1,0 +1,69 @@
+
+
+<div ng-controller="DiscountCtrl as dc">
+    <div class="jumbotron">
+        <h2>A Modern Web Template</h2>
+        <p class="pull-right">... a UI created using AngularJS and Bootstrap</p>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <h3>
+                Discounts
+                <a ng-href="/#/discounts/create" class="btn btn-primary pull-right" id="btn_user_create">Add Discounts</a>
+            </h3>
+            <hr>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" ng-model="searchText" placeholder="Type here to filter Users...">
+            <hr>
+        </div>
+
+
+        <table id="discount_list" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Discount</th>
+                <th>Is Percent</th>
+                <th>Is After Tax</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="discount in dc.discounts | filter:searchText">
+                <td>
+                    {{ discount.name }}
+                </td>
+                <td>
+                    {{ discount.discount }}
+                </td>
+                <td>
+                    <i class="glyphicon" ng-class="{'glyphicon-ok': discount.isPercent, 'glyphicon-remove': !discount.isPercent}"></i>
+                </td>
+                <td>
+                    <i class="glyphicon" ng-class="{'glyphicon-ok': discount.isAfterTax, 'glyphicon-remove': !discount.isAfterTax}"></i>
+                </td>
+            </tr>
+            <tr ng-hide="dc.discounts.length">
+                <td colspan="3">
+                    <p class="text-center">No Discounts Found</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>
+            Debug
+        </h3>
+        <hr>
+        <accordion>
+            <accordion-group is-open="status.open">
+                <accordion-heading>
+                    Json Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                </accordion-heading>
+                <pre>{{ dc.discounts | json }}</pre>
+            </accordion-group>
+        </accordion>
+    </div>
+
+</div>

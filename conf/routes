@@ -5,13 +5,39 @@
 # ~~~~
 
 # Single endpoint for serving AngularJS
-GET     /                           @controllers.Application.index
-GET     /randomUUID                 @controllers.Application.randomUUID
+GET     /                           controllers.Application.index
+GET     /randomUUID                 controllers.Application.randomUUID
 
 # User management API
-GET     /users                      @controllers.Users.findUsers
-POST    /user                       @controllers.Users.createUser
-PUT     /user/:firstName/:lastName  @controllers.Users.updateUser(firstName: String, lastName: String)
+GET     /users                      controllers.Users.findUsers
+POST    /user                       controllers.Users.createUser
+PUT     /user/:firstName/:lastName  controllers.Users.updateUser(firstName: String, lastName: String)
+
+# Associate management API
+GET     /associates                 controllers.Associate.getAll
+GET     /associate/:id              controllers.Associate.get(id:String)
+POST    /associate                  controllers.Associate.create
+
+# Tax management API
+GET     /taxes                      controllers.Tax.getAll
+GET     /tax/:id                    controllers.Tax.get(id:String)
+POST    /tax                        controllers.Tax.create
+
+# Product management API
+GET     /products                   controllers.Product.getAll
+GET     /product/:id                controllers.Product.get(id:String)
+POST    /product                    controllers.Product.create
+
+# Discount management API
+GET     /discounts                  controllers.Discount.getAll
+GET     /discount/:id               controllers.Discount.get(id:String)
+POST    /discount                   controllers.Discount.create
+
+# Invoice management API
+GET     /invoices                   controllers.Invoice.listInvoices
+GET     /invoice/:id                controllers.Invoice.getInvoice(id:String)
+POST    /invoice                    controllers.Invoice.createInvoice
+POST    /invoice/:id/line           controllers.Invoice.addLineItem(id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

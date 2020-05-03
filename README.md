@@ -1,7 +1,7 @@
 Modern Web Template
 ===========
 
-**AngularJS - Scala - Play - Guice - PlayReactiveMongo**
+**AngularJS - Scala - Play - Scaladi - PlayReactiveMongo**
 
 A full application stack for a Modern Web application, lets review the components:
 
@@ -15,11 +15,11 @@ fronted with Twitter bootstrap CSS framework, because well, im not a web designe
 * **CoffeeScript** - CoffeeScript is an attempt to expose the good parts of JavaScript in a simple way.
   *  [http://coffeescript.org/](http://coffeescript.org/)
 
-* **PlayFramework** - currently using 2.3.9 with the scala API
+* **PlayFramework** - currently using 2.4.2 with the scala API
   *  [PlayFramework Docs](http://www.playframework.com/documentation/2.3.9/Home)
 
-* **Guice** integration for Dependency injection,
-  * Special thanks to the typesafehub team for their activator : [Play-Guice](http://www.typesafe.com/activator/template/play-guice)
+* **Scaladi** integration for Dependency injection
+  *  [Scaladi](http://scaldi.org/learn/)
 
 * **PlayReactiveMongo** gives interaction with MongoDB providing a non-blocking driver as well as some useful additions for handling JSON.
   * Check out their GitHub: [Play-ReactiveMongo](https://github.com/ReactiveMongo/Play-ReactiveMongo)

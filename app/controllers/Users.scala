@@ -1,12 +1,13 @@
 package controllers
 
-import play.modules.reactivemongo.MongoController
+import play.modules.reactivemongo.{ReactiveMongoComponents, ReactiveMongoApi, MongoController}
+import play.modules.reactivemongo.json._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import scala.concurrent.Future
 import reactivemongo.api.Cursor
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import org.slf4j.{LoggerFactory, Logger}
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import play.api.libs.json._
 
@@ -16,7 +17,8 @@ import play.api.libs.json._
  * @see https://github.com/ReactiveMongo/Play-ReactiveMongo
  */
 @Singleton
-class Users extends Controller with MongoController {
+class Users @Inject() (val reactiveMongoApi: ReactiveMongoApi)
+  extends Controller with MongoController with ReactiveMongoComponents {
 
   private final val logger: Logger = LoggerFactory.getLogger(classOf[Users])
 
@@ -90,7 +92,7 @@ class Users extends Controller with MongoController {
     // everything's ok! Let's reply with the array
     futurePersonsJsonArray.map {
       users =>
-        Ok(users(0))
+        Ok(users.value(0))
     }
   }
 

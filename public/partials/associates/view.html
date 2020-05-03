@@ -1,0 +1,64 @@
+
+
+<div ng-controller="AssociateCtrl as ac">
+    <div class="jumbotron">
+        <h2>A Modern Web Template</h2>
+        <p class="pull-right">... a UI created using AngularJS and Bootstrap</p>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <h3>
+                Associates
+                <a ng-href="/#/associates/create" class="btn btn-primary pull-right" id="btn_user_create">Add Associates</a>
+            </h3>
+            <hr>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" ng-model="searchText" placeholder="Type here to filter Users...">
+            <hr>
+        </div>
+
+
+        <table id="associate_list" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Active</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="associate in ac.associates | filter:searchText">
+                <td>
+                    {{ associate.name }}
+                </td>
+                <td>
+                    <i class="glyphicon" ng-class="{'glyphicon-ok': associate.active, 'glyphicon-remove': !associate.active}"></i>
+                </td>
+                <!--td>
+                    <a ng-href="/#/users/edit/ usr.firstName / usr.lastName " class="btn btn-success pull-right" id="btn_user_update">Edit User</a>
+                </td-->
+            </tr>
+            <tr ng-hide="ac.associates.length">
+                <td colspan="3">
+                    <p class="text-center">No Associates Found</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>
+            Debug
+        </h3>
+        <hr>
+        <accordion>
+            <accordion-group is-open="status.open">
+                <accordion-heading>
+                    Json Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                </accordion-heading>
+                <pre>{{ ac.associates | json }}</pre>
+            </accordion-group>
+        </accordion>
+    </div>
+
+</div>

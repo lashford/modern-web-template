@@ -23,6 +23,15 @@
             </button>
             <a class="navbar-brand" href="#">Modern Web Template</a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="/#/associates">Associates</a></li>
+                <li><a href="/#/taxes">Taxes</a></li>
+                <li><a href="/#/products">Products</a></li>
+                <li><a href="/#/discounts">Discounts</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -51,7 +60,11 @@
 <script src='@routes.Assets.versioned("lib/angular-ui-bootstrap/ui-bootstrap-tpls.js")' type="text/javascript"></script>
 
 <!-- Coffee script compiled resources (generated) -->
+<script src='@routes.Assets.versioned("javascripts/app.js")' type="text/javascript"></script>
+
 @for(script <- javascripts) {
-  <script src='@routes.Assets.versioned(script)' type="text/javascript"></script>
+    @if(!script.endsWith("app.js")){
+        <script src='@routes.Assets.versioned(script)' type="text/javascript"></script>
+    }
 }
 </html>

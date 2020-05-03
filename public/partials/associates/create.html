@@ -1,0 +1,39 @@
+<div ng-controller="CreateAssociateCtrl as cac">
+    <h1>Create Associate</h1>
+
+    <form id="CreateAssociateForm" name="CreateAssociateForm" class="form-horizontal" role="form"
+          ng-submit="cac.createAssociate()">
+        <legend class="sm-col-12">Basic Information</legend>
+
+        <div class="form-group">
+            <label id="lbl_firstName" for="name" class="col-sm-4 control-label">Name</label>
+
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="name" id="name" placeholder=""
+                       ng-model="cac.associate.name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label id="lbl_lastName" for="active" class="col-sm-4 control-label">Active</label>
+
+            <div class="col-sm-8">
+                <input type="checkbox" class="form-control" name="active" id="active" placeholder=""
+                       ng-model="cac.associate.active">
+            </div>
+        </div>
+
+        <pre>{{ cac.associate | json }}</pre>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8 text-right">
+                <a ng-href="/#/" id="btn_cancel" class="btn btn-warning">Cancel</a>
+
+                <button type="submit" class="btn btn-success" id="btn_create">Create Associate</button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+
